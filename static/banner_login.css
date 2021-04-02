@@ -1,0 +1,98 @@
+/* Remove default margin and padding for all elements */
+* {
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  width: 100%;
+  height: 100vh;  /* 100% of the viewport height */
+  background: linear-gradient(rgba(0, 0, 0, .8), rgba(0, 0, 0, .7)),
+              url(images/bg1.jpg) center no-repeat;
+  background-size: cover; /* Makes background full screen */
+}
+
+.banner {
+  color: #fff;
+  width: 950px;
+  position: absolute; /* Positioned relative to the nearest positioned ancestor (here container)*/
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex; /* Change row to column and vise-versa */
+  flex-direction: column; /* Choose direction of flex */
+  justify-content: center; /* centers content based on main axis (here y-axis)*/
+  align-items: center; /* centers items based on the opposite of main axis (here x-axis)*/
+}
+
+.banner-heading {
+  font-family: 'Roboto Condensed', sans-serif;
+  font-size: 60px;
+  text-transform: uppercase;
+  margin-bottom: 40px;
+  border-top: 7px solid #fff;
+  border-bottom: 7px solid #fff;
+}
+
+.arrows-btn {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.arrow-left {
+  font-size: 40px;
+  margin-right: 30px;
+  animation: anim-left 3s infinite;
+}
+
+.arrow-right {
+  font-size: 40px;
+  margin-left: 30px;
+  animation: anim-right 3s infinite;
+}
+
+.banner-btn {
+  width: 200px;
+  padding: 15px;
+  font-family: 'Roboto Condensed', sans-serif;
+  font-size: 17px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  background: transparent;
+  color: #fff;
+  border-radius: 50px;
+  border: 2px solid #fff;
+  outline: none;
+  cursor: pointer;
+  transition: transform .3s;
+}
+
+.banner-btn:hover {
+  transform: translateY(-2px);
+}
+
+@keyframes anim-left {
+  0% {transform: translateX(0);}
+  20% {transform: translateX(0);}
+  40% {transform: translateX(-30px);}
+  50% {transform: translateX(0);}
+  60% {transform: translateX(-15px);}
+  80% {transform: translateX(0);}
+  100% {transform: translateX(0);}
+}
+
+@keyframes anim-right {
+  0% {transform: translateX(0);}
+  20% {transform: translateX(0);}
+  40% {transform: translateX(30px);}
+  50% {transform: translateX(0);}
+  60% {transform: translateX(15px);}
+  80% {transform: translateX(0);}
+  100% {transform: translateX(0);}
+}
+
+.form-container {
+  display: none;
+}

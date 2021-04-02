@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+
+{% block body %}
+
+<div class="container">
+  <!-- Start screen banner -->
+  <div class="banner">
+    <h1 class="banner-heading">Welcome to Chat Room</h1>
+    <div class="arrows-btn">
+      <div class="arrow-left">
+        <i class="fas fa-arrow-right"></i>
+      </div>
+      <button class="banner-btn">Get Started</button>
+      <div class="arrow-right">
+        <i class="fas fa-arrow-left"></i>
+      </div>
+    </div>
+  </div>
+
+  <!-- Form for inputing data -->
+  <div class="form-container">
+    <form class="sign-up-form" action="#.html" method="POST">
+      <input type="text" class="form-input" name="" placeholder="Enter Your Name">
+      <button type="button">Sign In</button>
+    </form>
+
+    <!-- Form header on the side -->
+    <div class="header">
+      <h1>Welcome To Chat Room</h1>
+    </div>
+
+    <!-- An X, acts as a button, which redirects us to the start screen banner -->
+    <div class="x-btn">&#10005;</div>
+  </div>
+</div>
+
+{% endblock %}

@@ -11,11 +11,12 @@ HOST = socket.gethostbyname(socket.gethostname())
 PORT = 55555
 ADDR = (HOST, PORT)
 HEADER = 512
-ENCODE_FORMAT = 'utf-8'
+FORMAT = 'utf-8'
 
 # Connecting To Server
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 client.connect(ADDR)
+
 
 #  Send Nickname and Listens for Incoming Messages.
 def receive_message():
@@ -23,9 +24,9 @@ def receive_message():
         try:
             # Receive Message from Server
             # If 'NICK' Send Nickname
-            message = client.recv(HEADER).decode(ENCODE_FORMAT)
+            message = client.recv(HEADER).decode(FORMAT)
             if message == 'NICK':
-                client.send(nickname.encode(ENCODE_FORMAT))
+                client.send(nickname.encode(FORMAT))
             else:
                 print(message)
         except Exception as e:
@@ -34,11 +35,22 @@ def receive_message():
             client.close()
             break
 
+
 # Sending Messages to Server
-def send_message():
+def send_message(message=None):
     while True:
-        message = '{}: {}'.format(nickname, input(''))
-        client.send(message.encode(ENCODE_FORMAT))
+        if message == '{!DISCONNECT}':
+            client.close()
+            break
+        else:
+            message = '{}: {}'.format(nickname, input(''))
+            client.send(message.encode(FORMAT))
+
+
+# Disconnecting Client
+def disconnect():
+    send_message('{!DISCONNECT}')
+
 
 # Starting Threads for Listening and Writing
 receive_thread = threading.Thread(target=receive_message)
