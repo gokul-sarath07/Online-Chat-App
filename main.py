@@ -6,6 +6,7 @@ NAME_KEY = 'name'
 app = Flask(__name__)
 app.secret_key = 'secret_pass_code'
 
+@app.route('/')
 @app.route('/login', methods=['POST', 'GET'])
 def login():
     return render_template('login.html')
