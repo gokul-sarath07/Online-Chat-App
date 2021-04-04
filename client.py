@@ -13,40 +13,54 @@ class Client:
     FORMAT = 'utf-8'
 
     def __init__(self, nickname):
-        # Choosing Nickname
+        """
+        Choosing a nickname and connecting to server.
+        param: nickname, type: string.
+        """
         self.nickname = nickname
-        # Connecting To Server
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.client.connect(Client.ADDR)
 
 
-    #  Send Nickname and Listens for Incoming Messages.
+
     def receive_message(self):
+        """
+        Send nickname and listens for incoming messages.
+        param: None.
+        return: None.
+        """
         while True:
             try:
-                # Receive Message from Server
-                # If 'NICK' Send Nickname
+                # Receive message from server.
                 message = self.client.recv(Client.HEADER).decode(Client.FORMAT)
+                # If message == 'NICK', Send Nickname.
                 if message == 'NICK':
                     self.client.send(self.nickname.encode(Client.FORMAT))
+                # else print message.
                 else:
                     print(message)
             except Exception as e:
-                # Close Connection When Error Occures
-                print("[EXCEPTION C-re] ", e)
+                # Close connection when error occures
+                print("[EXCEPTION C-rm] ", e)
                 self.client.send('{!DISCONNECT}'.encode(Client.FORMAT))
                 self.client.close()
                 break
 
 
-    # Sending Messages to Server
     def send_message(self, message=''):
+        """
+        Sending Messages to Server.
+        param: message, type: string.
+        return: None.
+        """
         while True:
             try:
+                # Closes connection if message is {!DISCONNECT}
                 if message == '{!DISCONNECT}':
                     self.client.send(message.encode(Client.FORMAT))
                     self.client.close()
                     break
+                # Sends message to all clients.
                 else:
                     msg = '{}: {}'.format(self.nickname, message)
                     self.client.send(msg.encode(Client.FORMAT))
@@ -54,14 +68,18 @@ class Client:
                 print("[EXCEPTION C-sm] ", e)
 
 
-    # Disconnecting Client
+
     def disconnect(self):
+        """
+        Disconnecting client.
+        param: None.
+        return: None.
+        """
         self.send_message('{!DISCONNECT}')
 
 
-# Starting Threads for Listening and Writing
-# receive_thread = threading.Thread(target=receive_message)
-# receive_thread.start()
+
+# Starting Threads for Writing
 
 # send_thread = threading.Thread(target=send_message)
 # send_thread.start()

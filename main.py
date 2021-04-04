@@ -17,7 +17,9 @@ def login():
 def chatroom():
     if request.method == 'POST':
         client_name = request.form['form-input']
+        # Create a new client.
         newClient = Client(client_name)
+        # Starting Threads for Listening.
         Thread(target=newClient.receive_message).start()
         # client.receive_thread.start()
         # client.send_thread.start()
@@ -26,4 +28,4 @@ def chatroom():
 
 if __name__ == '__main__':
     # host=gethostbyname(gethostname())
-    app.run(debug=True)
+    app.run(debug=False)
