@@ -13,6 +13,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Mirza&family=Nova+Mono&display=swap" rel="stylesheet">
     <!-- CSS Link -->
     <link rel='stylesheet' href="{{ url_for('static', filename='banner_login.css') }}">
+    <link rel='stylesheet' href="{{ url_for('static', filename='chat_room.css') }}">
     <title>Online Chat Room</title>
   </head>
   <body>
@@ -20,6 +21,6 @@
     {% block body %} {% endblock %}
 
     <script type="text/javascript" src="{{ url_for('static', filename='banner_login.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='index.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='chat_room.js') }}"></script>
   </body>
 </html>

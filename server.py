@@ -9,8 +9,8 @@ FORMAT = 'utf-8'
 MAX_CONNECTIONS = 10
 
 # Connection Data
-HOST = gethostbyname(gethostname())
-# HOST = '127.0.0.1'
+# HOST = gethostbyname(gethostname())
+HOST = '127.0.0.1'
 PORT = 55555
 ADDR = (HOST, PORT)
 
@@ -39,7 +39,7 @@ def handle_client(client):
             else:
                 broadcast(message)
         except Exception as e:
-            print("[EXCEPTION] ", e)
+            print("[EXCEPTION S-hc] ", e)
             # Removes Client
             remove_client(client)
             break
@@ -75,7 +75,7 @@ def waiting_for_connections():
             thread.start()
             print("[ACTIVE CONNECTIONS] {}".format(active_count() - 1))
         except Exception as e:
-            print("[EXEPTION] ", e)
+            print("[EXEPTION S-wfc] ", e)
             break
     print("SERVER CRASHED!")
 
