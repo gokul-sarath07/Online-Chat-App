@@ -1,0 +1,343 @@
+:root {
+  --navbar-bg-color: hsl(0, 0%, 15%);
+  --navbar-text-color: hsl(0, 0%, 85%);
+  --navbar-text-color-focus: white;
+  --navbar-bg-contrast: hsl(0, 0%, 25%);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  height: 100vh;
+  font-family: Arial, Helvetica, sans-serif;
+  line-height: 1.6;
+}
+
+/* =============================== Navbar CSS =============================== */
+
+.container {
+  max-width: 1000px;
+  padding-left: 1.4rem;
+  padding-right: 1.4rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#navbar {
+    --navbar-height: 64px;
+    position: fixed;
+    height: var(--navbar-height);
+    background-color: var(--navbar-bg-color);
+    left: 0;
+    right: 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+.navbar-container {
+    display: flex;
+    justify-content: space-between;
+    height: 100%;
+    align-items: center;
+}
+
+.navbar-item {
+    margin: 0.4em;
+    width: 100%;
+}
+
+.navbar-brand,
+.navbar-link {
+    color: var(--navbar-text-color);
+    transition: color 0.2s ease-in-out;
+    text-decoration: none;
+    display: flex;
+    font-weight: 400;
+    align-items: center;
+    transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+
+.navbar-brand:focus,
+.navbar-brand:hover {
+    color: var(--navbar-text-color-focus);
+}
+
+.navbar-link {
+    justify-content: center;
+    width: 100%;
+    padding: 0.4em 0.8em;
+    border-radius: 5px;
+}
+
+.navbar-link:focus,
+.navbar-link:hover {
+    color: var(--navbar-text-color-focus);
+    background-color: var(--navbar-bg-contrast);
+}
+
+.navbar-toggle {
+    cursor: pointer;
+    border: none;
+    background-color: transparent;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.icon-bar {
+    display: block;
+    width: 25px;
+    height: 4px;
+    margin: 2px;
+    transition: background-color 0.2s ease-in-out,
+                transform 0.2s ease-in-out,
+                opacity 0.2s ease-in-out;
+    background-color: var(--navbar-text-color);
+}
+
+.navbar-toggle:focus .icon-bar,
+.navbar-toggle:hover .icon-bar {
+    background-color: var(--navbar-text-color-focus);
+}
+
+#navbar.opened .navbar-toggle .icon-bar:first-child,
+#navbar.opened .navbar-toggle .icon-bar:last-child {
+    position: absolute;
+    margin: 0;
+    width: 30px;
+}
+
+#navbar.opened .navbar-toggle .icon-bar:first-child {
+    transform: rotate(45deg);
+}
+
+#navbar.opened .navbar-toggle .icon-bar:nth-child(2) {
+    opacity: 0;
+}
+
+#navbar.opened .navbar-toggle .icon-bar:last-child {
+    transform: rotate(-45deg);
+}
+
+.navbar-menu {
+    position: fixed;
+    top: var(--navbar-height);
+    bottom: 0;
+    transition: opacity 0.2s ease-in-out,
+                visibility 0.2s ease-in-out;
+    opacity: 0;
+    visibility: hidden;
+    left: 0;
+    right: 0;
+}
+
+#navbar.opened .navbar-menu {
+    background-color: rgba(0, 0, 0, 0.4);
+    opacity: 1;
+    visibility: visible;
+}
+
+.navbar-links {
+    list-style-type: none;
+    max-height: 0;
+    overflow: hidden;
+    position: absolute;
+    background-color: var(--navbar-bg-color);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    left: 0;
+    right: 0;
+    margin: 1.4rem;
+    border-radius: 5px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+}
+
+#navbar.opened .navbar-links {
+    padding: 1em;
+    max-height: none;
+}
+
+@media screen and (min-width: 700px) {
+    .navbar-toggle {
+        display: none;
+    }
+
+    #navbar .navbar-menu,
+    #navbar.opened .navbar-menu {
+        visibility: visible;
+        opacity: 1;
+        position: static;
+        display: block;
+        height: 100%;
+    }
+
+    #navbar .navbar-links,
+    #navbar.opened .navbar-links {
+        margin: 0;
+        padding: 0;
+        box-shadow: none;
+        position: static;
+        flex-direction: row;
+        list-style-type: none;
+        max-height: max-content;
+        width: 100%;
+        height: 100%;
+    }
+
+    #navbar .navbar-link:last-child {
+        margin-right: 0;
+    }
+}
+
+/* =========================== Chat Container CSS =========================== */
+
+.chat-container {
+  padding-top: 100px;
+  width: 100%;
+  height: 100vh;
+  background-color: #b7b7a4;
+  display: flex;
+}
+
+.chat-users {
+  width: 300px;
+  height: 80vh;
+  background-color: #cb997e;
+  margin: 0 40px;
+  border-radius: 30px;
+  box-shadow: inset 0.5px 0.5px 15px #888888;
+  padding-bottom: 20px;
+  padding-left: 35px;
+  padding-right: 25px;
+  overflow: scroll;
+  overflow-x: hidden;
+}
+
+.chat-area {
+  width: 950px;
+  height: 80vh;
+  background-color: grey;
+  border-radius: 30px;
+  position: relative;
+}
+
+.chat-content-area {
+  width: 900px;
+  height: 65vh;
+  background-color: #ede0d4;
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  transform: translate(-50%, -20%);
+  border-radius: 30px;
+  box-shadow: inset 0.02px 0.02px 10px #888888;
+  overflow: scroll;
+  overflow-x: hidden;
+  padding-bottom: 20px;
+  padding-left: 25px;
+}
+
+.input-box-btn {
+  width: 900px;
+  height: 50px;
+  position: absolute;
+  left: 50%;
+  bottom: 3%;
+  transform: translate(-50%, -3%);
+  border-radius: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.msg-input-box {
+  width: 93.5%;
+  height: 50px;
+  border-radius: 50px;
+  outline: none;
+  border: 1px solid black;
+  font-size: 20px;
+  position: absolute;
+  left: 0;
+  padding-left: 30px;
+  letter-spacing: 1px;
+}
+
+.msg-input-box:focus {
+  box-shadow: inset 0.02px 0.02px 10px #888888;
+}
+
+.chat-send-btn {
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  right: 0px;
+  border-radius: 50%;
+  font-size: 25px;
+  border: 1px solid black;
+  outline: none;
+  cursor: pointer;
+  transition: ease-in-out all 0.1s;
+  transform: scale(1);
+}
+
+.chat-send-btn:active {
+  transform: scale(0.9);
+}
+
+.user-msg {
+  width: 750px;
+  height: 50px;
+  padding-left: 20px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  margin-top: 20px;
+  border-radius: 8px;
+  font-size: 20px;
+  letter-spacing: 1px;
+  border: 1px solid black;
+}
+
+.user-name {
+  width: 100%;
+  height: 50px;
+  margin-top: 20px;
+  border-radius: 8px;
+  border: 1px solid black;
+}
+
+/* ============================= Scroll Bar CSS ============================= */
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #868;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.chat-users::-webkit-scrollbar-track-piece:start,
+.chat-content-area::-webkit-scrollbar-track-piece:start {
+  margin-top: 25px;
+}
+
+.chat-users::-webkit-scrollbar-track-piece:end,
+.chat-content-area::-webkit-scrollbar-track-piece:end {
+    margin-bottom: 25px;
+}

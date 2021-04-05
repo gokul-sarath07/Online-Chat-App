@@ -4,7 +4,7 @@
   padding: 0;
 }
 
-.container {
+.login-container {
   width: 100%;
   height: 100vh;  /* 100% of the viewport height */
   background: linear-gradient(rgba(0, 0, 0, .8), rgba(0, 0, 0, .7)), url("images/bg1.jpg") center no-repeat;
@@ -16,7 +16,7 @@
 .banner {
   color: #fff;
   width: 950px;
-  position: absolute; /* Positioned relative to the nearest positioned ancestor (here container)*/
+  position: absolute; /* Positioned relative to the nearest positioned ancestor (here login-container)*/
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);

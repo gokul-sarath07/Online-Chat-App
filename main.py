@@ -21,6 +21,7 @@ def chatroom():
         newClient = Client(client_name)
         # Starting Threads for Listening.
         Thread(target=newClient.receive_message).start()
+        Thread(target=newClient.send_message).start()
         # client.receive_thread.start()
         # client.send_thread.start()
         return render_template('chat_room.html')

@@ -62,11 +62,14 @@ class Client:
                     break
                 # Sends message to all clients.
                 else:
-                    msg = '{}: {}'.format(self.nickname, message)
-                    self.client.send(msg.encode(Client.FORMAT))
+                    if message != '':
+                        msg = '{}: {}'.format(self.nickname, message)
+                        self.client.send(msg.encode(Client.FORMAT))
+                    else:
+                        pass
             except Exception as e:
                 print("[EXCEPTION C-sm] ", e)
-
+                break
 
 
     def disconnect(self):
@@ -76,10 +79,3 @@ class Client:
         return: None.
         """
         self.send_message('{!DISCONNECT}')
-
-
-
-# Starting Threads for Writing
-
-# send_thread = threading.Thread(target=send_message)
-# send_thread.start()
