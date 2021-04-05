@@ -7,6 +7,8 @@ app = Flask(__name__)
 app.secret_key = 'secret_pass_code'
 
 
+newClient = None
+
 @app.route('/')
 @app.route('/login')
 def login():
@@ -16,15 +18,20 @@ def login():
 @app.route('/chatroom', methods=['POST', 'GET'])
 def chatroom():
     if request.method == 'POST':
+        global newClient
         client_name = request.form['form-input']
         # Create a new client.
         newClient = Client(client_name)
         # Starting Threads for Listening.
         Thread(target=newClient.receive_message).start()
         Thread(target=newClient.send_message).start()
-        # client.receive_thread.start()
-        # client.send_thread.start()
         return render_template('chat_room.html')
+
+@app.route('/logout')
+def logout():
+    # name = request.args.get('client_name')
+    newClient.disconnect()
+    return redirect(url_for('login'))
 
 
 if __name__ == '__main__':

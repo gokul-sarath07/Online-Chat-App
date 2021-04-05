@@ -1,6 +1,6 @@
 # Required Packages
 import socket
-# import threading
+from threading import Thread
 
 class Client:
 
@@ -11,6 +11,9 @@ class Client:
     ADDR = (HOST, PORT)
     HEADER = 512
     FORMAT = 'utf-8'
+
+    # GLOBAL VARIABLE
+    stop_thread = False
 
     def __init__(self, nickname):
         """
@@ -30,19 +33,22 @@ class Client:
         return: None.
         """
         while True:
+            if Client.stop_thread:
+                break
             try:
                 # Receive message from server.
                 message = self.client.recv(Client.HEADER).decode(Client.FORMAT)
                 # If message == 'NICK', Send Nickname.
                 if message == 'NICK':
                     self.client.send(self.nickname.encode(Client.FORMAT))
+                    continue
                 # else print message.
                 else:
                     print(message)
+                    continue
             except Exception as e:
                 # Close connection when error occures
                 print("[EXCEPTION C-rm] ", e)
-                self.client.send('{!DISCONNECT}'.encode(Client.FORMAT))
                 self.client.close()
                 break
 
@@ -54,19 +60,24 @@ class Client:
         return: None.
         """
         while True:
+            if Client.stop_thread:
+                break
             try:
                 # Closes connection if message is {!DISCONNECT}
                 if message == '{!DISCONNECT}':
-                    self.client.send(message.encode(Client.FORMAT))
+                    self.client.send('{!DISCONNECT}'.encode(Client.FORMAT))
                     self.client.close()
-                    break
+                    Client.stop_thread = True
+                    continue
                 # Sends message to all clients.
                 else:
                     if message != '':
                         msg = '{}: {}'.format(self.nickname, message)
                         self.client.send(msg.encode(Client.FORMAT))
+                        message = ''
+                        continue
                     else:
-                        pass
+                        continue
             except Exception as e:
                 print("[EXCEPTION C-sm] ", e)
                 break
@@ -79,3 +90,7 @@ class Client:
         return: None.
         """
         self.send_message('{!DISCONNECT}')
+
+    # def start_client_thread(self):
+    #     Thread(target=self.receive_message).start()
+    #     Thread(target=self.send_message).start()

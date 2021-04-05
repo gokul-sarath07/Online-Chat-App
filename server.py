@@ -17,7 +17,7 @@ SERVER = socket(AF_INET, SOCK_STREAM)
 SERVER.bind(ADDR)
 clients = []
 nicknames = []
-
+address = None
 
 def broadcast(message):
     """
@@ -58,10 +58,12 @@ def remove_client(client):
     param: client, type: object.
     return: None.
     """
+    global address
     index = clients.index(client)
     clients.remove(client)
     client.close()
     nickname = nicknames[index]
+    print("{} has left the server.".format(address))
     broadcast("{} has left the chat!".format(nickname).encode(FORMAT))
     nicknames.remove(nickname)
 
@@ -74,6 +76,7 @@ def waiting_for_connections():
     """
     while True:
         try:
+            global address
             # Accept connection.
             client, address = SERVER.accept()
             print("[NEW CONNECTION] {} connected to server at {}".format(str(address), datetime.now()))
@@ -88,14 +91,15 @@ def waiting_for_connections():
             broadcast("{} joined the chat!".format(nickname).encode(FORMAT))
 
             # Start handling thread for client.
-            thread = Thread(target=handle_client, args=(client,))
-            thread.start()
+            client_thread = Thread(target=handle_client, args=(client,))
+            client_thread.start()
+
             # Print number of active connections.
             print("[ACTIVE CONNECTIONS] {}".format(active_count() - 2))
         except Exception as e:
             print("[EXEPTION S-wfc] ", e)
+            print("SERVER CRASHED!")
             break
-    print("SERVER CRASHED!")
 
 
 
