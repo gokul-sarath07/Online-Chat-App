@@ -36,6 +36,12 @@ navbarMenu.addEventListener("click", closeMobileNavbar);
 // }, 1000);
 
 // Scroll to bottom when new content is added.
+// document.querySelector(".chat-send-btn").addEventListener('click', () => {
+//   var elem = document.getElementById('scroll');
+//   // elem.scrollTop = elem.scrollHeight;
+//   elem.scrollTop: elem.scrollHeight - elem.clientHeight
+// });
+
 window.setInterval(function() {
   var elem = document.getElementById('scroll');
   elem.scrollTop = elem.scrollHeight;
