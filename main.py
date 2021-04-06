@@ -10,22 +10,25 @@ app.secret_key = 'secret_pass_code'
 newClient = None
 
 @app.route('/')
-@app.route('/login')
+@app.route('/login', methods=['POST', 'GET'])
 def login():
-    return render_template('login.html')
-
-
-@app.route('/chatroom', methods=['POST', 'GET'])
-def chatroom():
     if request.method == 'POST':
         global newClient
         client_name = request.form['form-input']
         # Create a new client.
+        print("NAME RECEIVED")
         newClient = Client(client_name)
-        # Starting Threads for Listening.
-        Thread(target=newClient.receive_message).start()
-        Thread(target=newClient.send_message).start()
-        return render_template('chat_room.html')
+        print("NAME SEND")
+        # Starting thread for receiving and sending.
+        newClient.start_client_threads()
+        print("THREADS CREATED")
+        return redirect(url_for('chatroom'))
+    return render_template('login.html')
+
+
+@app.route('/chatroom')
+def chatroom():
+    return render_template('chat_room.html')
 
 @app.route('/logout')
 def logout():

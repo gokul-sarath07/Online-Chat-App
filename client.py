@@ -41,15 +41,15 @@ class Client:
                 # If message == 'NICK', Send Nickname.
                 if message == 'NICK':
                     self.client.send(self.nickname.encode(Client.FORMAT))
-                    continue
+                    message = ''
                 # else print message.
                 else:
                     print(message)
-                    continue
             except Exception as e:
-                # Close connection when error occures
+                # Close connection when error occures.
                 print("[EXCEPTION C-rm] ", e)
-                self.client.close()
+                self.disconnect()
+                Client.stop_thread = True
                 break
 
 
@@ -66,20 +66,21 @@ class Client:
                 # Closes connection if message is {!DISCONNECT}
                 if message == '{!DISCONNECT}':
                     self.client.send('{!DISCONNECT}'.encode(Client.FORMAT))
-                    self.client.close()
                     Client.stop_thread = True
-                    continue
-                # Sends message to all clients.
+                    break
+                # Send message to server.
                 else:
+                    # Contains some message.
                     if message != '':
                         msg = '{}: {}'.format(self.nickname, message)
                         self.client.send(msg.encode(Client.FORMAT))
                         message = ''
-                        continue
+                    # Message is empty.
                     else:
                         continue
             except Exception as e:
                 print("[EXCEPTION C-sm] ", e)
+                Client.stop_thread = True
                 break
 
 
@@ -91,6 +92,9 @@ class Client:
         """
         self.send_message('{!DISCONNECT}')
 
-    # def start_client_thread(self):
-    #     Thread(target=self.receive_message).start()
-    #     Thread(target=self.send_message).start()
+    def start_client_threads(self):
+        """
+        Threads for receiving and sending messages.
+        """
+        Thread(target=self.receive_message).start()
+        Thread(target=self.send_message).start()
