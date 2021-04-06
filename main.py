@@ -29,9 +29,12 @@ def login():
 def chatroom():
     if request.method == 'POST':
         message = request.form['msg-input-box']
-        message = clients[0] + ": " + message
-        messages.append(message)
-        return redirect(url_for('chatroom'))
+        if message != '':
+            message = clients[0] + ": " + message
+            messages.append(message)
+            return redirect(url_for('chatroom'))
+        else:
+            return render_template('chat_room.html', messages=messages, clients=clients)
     else:
         return render_template('chat_room.html', messages=messages, clients=clients)
 
