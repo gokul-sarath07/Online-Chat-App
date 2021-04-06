@@ -31,12 +31,6 @@ navbarLinksContainer.addEventListener("click", (clickEvent) => {
 navbarMenu.addEventListener("click", closeMobileNavbar);
 
 //
-// function setFocusOnDivWithId(elementClass) {
-//   const scrollIntoViewOptions = { behavior: "smooth", block: "center" };
-//   let scr = document.querySelector(elementClass).scrollIntoView(scrollIntoViewOptions);
-//   scr.scrollTop = scr.scrollHeight;
-// };
-//
 // window.setInterval(function() {
 // setFocusOnDivWithId(".chat-content-area")
 // }, 1000);

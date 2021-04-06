@@ -26,21 +26,25 @@
 <div class="chat-container">
   <!-- Number of logged in users will be shows here. -->
   <div class="chat-users">
-    <p class="user-name"></p>
+    {% for user in clients %}
+      <p class="user-name">{{ user }}</p>
+    {% endfor %}
   </div>
 
   <!-- Chat area contains the chat msg area, input box and send button. -->
   <div class="chat-area">
     <!-- Messages will be shows here. -->
     <div class="chat-content-area" id="scroll">
-      <p class="user-msg"></p>
+      {% for msg in messages %}
+        <p class="user-msg">{{ msg }}</p>
+      {% endfor %}
     </div>
 
     <!-- Container for input box and send button. -->
-    <div class="input-box-btn">
-      <input type="text" class="msg-input-box" placeholder="Type a message">
-      <button class="chat-send-btn" type="button"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
-    </div>
+      <form class="input-box-btn" action="/chatroom" method="POST">
+        <input type="text" name="msg-input-box" class="msg-input-box" placeholder="Type a message">
+        <button class="chat-send-btn" type="submit"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
+      </form>
   </div>
 </div>
 

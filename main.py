@@ -5,7 +5,8 @@ from socket import gethostname, gethostbyname
 
 app = Flask(__name__)
 app.secret_key = 'secret_pass_code'
-
+messages = []
+clients = []
 
 newClient = None
 
@@ -15,26 +16,37 @@ def login():
     if request.method == 'POST':
         global newClient
         client_name = request.form['form-input']
+        clients.append(client_name)
         # Create a new client.
-        print("NAME RECEIVED")
         newClient = Client(client_name)
-        print("NAME SEND")
         # Starting thread for receiving and sending.
         newClient.start_client_threads()
-        print("THREADS CREATED")
         return redirect(url_for('chatroom'))
     return render_template('login.html')
 
 
-@app.route('/chatroom')
+@app.route('/chatroom', methods=['POST', 'GET'])
 def chatroom():
-    return render_template('chat_room.html')
+    if request.method == 'POST':
+        message = request.form['msg-input-box']
+        message = clients[0] + ": " + message
+        messages.append(message)
+        return redirect(url_for('chatroom'))
+    else:
+        return render_template('chat_room.html', messages=messages, clients=clients)
+
 
 @app.route('/logout')
 def logout():
     # name = request.args.get('client_name')
     newClient.disconnect()
     return redirect(url_for('login'))
+
+
+@app.route('/send_message', methods=['POST'])
+def send_messages():
+    msg = request.args.get('val')
+    print(msg)
 
 
 if __name__ == '__main__':
