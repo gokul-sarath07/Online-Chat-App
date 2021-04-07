@@ -1,3 +1,0 @@
-# Online Chat App
-
-## In development...

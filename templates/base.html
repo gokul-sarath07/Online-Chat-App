@@ -9,16 +9,56 @@
     <!-- Google Font Link -->
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Mirza&family=Nova+Mono&display=swap" rel="stylesheet">
+    <!-- SocketIO Connection -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <!-- jQuery Connection -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <!-- CSS Link -->
-    {% block css_link %} {% endblock %}
+    {% block css_link %}{% endblock %}
     <title>Online Chat Room</title>
   </head>
   <body>
+    <script type="text/javascript">
+      const socket = io();
+      socket.on('connect', () => {
+          socket.emit('connect_info', {
+          username: "{{username}}"
+          });
+          let message_input = document.querySelector(".msg-input-box");
+          document.querySelector(".input-box-btn").onsubmit = (e) => {
+            console.log(message_input);
+            e.preventDefault();
+            let message = message_input.value.trim();
+            if (message.length) {
+                socket.emit('send_message', {
+                  username: "{{username}}",
+                  message: message
+              });
+            };
+            message_input.value = ' ';
+            message_input.focus();
+          };
+      });
+
+      socket.on('receive_message', (data) => {
+        const chat_area = $('.chat-content-area');
+        chat_area.append(`<p class="user-msg">${data.username}: ${data.message}</p>`);
+      })
+
+      socket.on('make_chat_announcement', (data) => {
+        const chat_users = $('.chat-users')
+        if (data.username.length) {
+          chat_users.append(`<p class="user-name">${data.username}</p>`);
+          const chat_area = $('.chat-content-area');
+          chat_area.append(`<p class="user-msg"><b>${data.username}</b> has joined the chat.</p>`);
+        }
+      });
+
+    </script>
 
     {% block body %} {% endblock %}
 
 
-
-    {% block script_link %} {% endblock %}
+    {% block script_link %}{% endblock %}
   </body>
 </html>

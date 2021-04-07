@@ -30,18 +30,6 @@ navbarLinksContainer.addEventListener("click", (clickEvent) => {
 
 navbarMenu.addEventListener("click", closeMobileNavbar);
 
-//
-// window.setInterval(function() {
-// setFocusOnDivWithId(".chat-content-area")
-// }, 1000);
-
-// Scroll to bottom when new content is added.
-// document.querySelector(".chat-send-btn").addEventListener('click', () => {
-//   var elem = document.getElementById('scroll');
-//   // elem.scrollTop = elem.scrollHeight;
-//   elem.scrollTop: elem.scrollHeight - elem.clientHeight
-// });
-
 window.setInterval(function() {
   var elem = document.getElementById('scroll');
   elem.scrollTop = elem.scrollHeight;
