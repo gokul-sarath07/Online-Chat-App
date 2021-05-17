@@ -16,7 +16,7 @@
     </button>
     <div class="navbar-menu">
       <ul class="navbar-links">
-        <li class="navbar-item"><a class="navbar-link" href="/">Log out</a></li>
+        <li class="navbar-item"><a class="navbar-link" href="/logout">Log out</a></li>
       </ul>
     </div>
   </nav>
@@ -25,7 +25,12 @@
 <!-- Chat Container. -->
 <div class="chat-container">
   <!-- Number of logged in users will be shows here. -->
-  <div class="chat-users"></div>
+  <div class="chat-users">
+    <h1>Room {{ room_number }}</h1>
+    <!-- {% for user in userList %}
+      <p class="user-name">{{ user }}</p>
+    {% endfor %} -->
+  </div>
 
   <!-- Chat area contains the chat msg area, input box and send button. -->
   <div class="chat-area">
@@ -34,10 +39,10 @@
     </div>
 
     <!-- Container for input box and send button. -->
-      <form class="input-box-btn">
-        <input type="text" name="msg-input-box" class="msg-input-box" placeholder="Type a message">
-        <button class="chat-send-btn" type="submit"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
-      </form>
+    <form class="input-box-btn">
+      <input type="text" name="msg-input-box" class="msg-input-box" placeholder="Type a message">
+      <button class="chat-send-btn" type="submit"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
+    </form>
   </div>
 </div>
 {% endblock %}

@@ -20,38 +20,59 @@
   <body>
     <script type="text/javascript">
       const socket = io();
+
       socket.on('connect', () => {
-          socket.emit('connect_info', {
-          username: "{{username}}"
-          });
-          let message_input = document.querySelector(".msg-input-box");
-          document.querySelector(".input-box-btn").onsubmit = (e) => {
-            console.log(message_input);
-            e.preventDefault();
-            let message = message_input.value.trim();
-            if (message.length) {
-                socket.emit('send_message', {
-                  username: "{{username}}",
-                  message: message
-              });
-            };
-            message_input.value = ' ';
-            message_input.focus();
+        socket.emit('join_room', {
+        username: "{{ username }}",
+        room_number: "{{ room_number }}"
+        });
+
+        let message_input = document.querySelector(".msg-input-box");
+        document.querySelector(".input-box-btn").onsubmit = (e) => {
+          e.preventDefault();
+          let message = message_input.value.trim();
+          if (message.length) {
+              socket.emit('send_message', {
+                username: "{{ username }}",
+                room_number: "{{ room_number }}",
+                message: message
+            });
           };
+          message_input.value = '';
+          message_input.focus();
+        };
+
+        // socket.on('disconnect', () => {
+        //   const chat_area = $('.chat-content-area');
+        //   chat_area.append(`<p class="user-msg">{{username}} has left the chat!</p>`);
+        //   socket.emit('disconnect_user', {
+        //     username: "{{username}}"
+        //   });
+        // })
+
+        document.querySelector('.navbar-link').addEventListener('click', () => {
+          socket.emit('disconnect_user', {
+          username: "{{ username }}"
+          });
+        });
       });
 
       socket.on('receive_message', (data) => {
         const chat_area = $('.chat-content-area');
-        chat_area.append(`<p class="user-msg">${data.username}: ${data.message}</p>`);
+        chat_area.append(`<p class="user-msg"><b>${data.username}</b>: ${data.message}</p>`);
       })
 
-      socket.on('make_chat_announcement', (data) => {
-        const chat_users = $('.chat-users')
+      socket.on('join_room_announcement', (data) => {
         if (data.username.length) {
+          const chat_users = $('.chat-users')
           chat_users.append(`<p class="user-name">${data.username}</p>`);
           const chat_area = $('.chat-content-area');
           chat_area.append(`<p class="user-msg"><b>${data.username}</b> has joined the chat.</p>`);
-        }
+      }});
+
+      socket.on('leave_chat_announcement', (data) => {
+        const chat_area = $('.chat-content-area');
+        chat_area.append(`<p class="user-msg"><b>{{username}}</b> has left the chat!</p>`);
       });
 
     </script>

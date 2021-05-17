@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block body %}
+{% if current_user.is_authenticated %}
+  <h3>Hi {{ current_user.username }}, select your room.</h3>
+{% else %}
+  <h3>You are logged out, Please Login</h3>
+{% endif %}
+
+<form class="sign-up-form" action='/chatroom'>
+  <input type="text" name='username' class="form-input" id="form-name-space" placeholder="Name" required>
+  <input type="text" name='room-number' class="form-input" id="form-name-space" placeholder="Room Number" required>
+  <button type="submit" id="form-btn">Sign In</button>
+</form>
+{% endblock %}
