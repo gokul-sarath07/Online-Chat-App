@@ -5,6 +5,74 @@
 {% endblock %}
 
 {% block body %}
+
+<script type="text/javascript">
+  const socket = io();
+
+  socket.on('connect', () => {
+    socket.emit('join_room', {
+    username: "{{ username }}",
+    room: "{{ room._id }}"
+    });
+
+    let message_input = document.querySelector(".msg-input-box");
+    document.querySelector(".input-box-btn").onsubmit = (e) => {
+      e.preventDefault();
+      let message = message_input.value.trim();
+      if (message.length) {
+          socket.emit('send_message', {
+            username: "{{ username }}",
+            room: "{{ room._id }}",
+            message: message
+        });
+      };
+      message_input.value = '';
+      message_input.focus();
+    };
+
+    window.onbeforeunload = () => {
+      socket.emit('leave_room', {
+        username: "{{ username }}",
+        room: "{{ room._id }}"
+      })
+    };
+
+    // socket.on('disconnect', () => {
+    //   const chat_area = $('.chat-content-area');
+    //   chat_area.append(`<p class="user-msg">{{username}} has left the chat!</p>`);
+    //   socket.emit('disconnect_user', {
+    //     username: "{{username}}"
+    //   });
+    // })
+
+    document.querySelector('.navbar-link').addEventListener('click', () => {
+      socket.emit('disconnect_user', {
+      username: "{{ username }}"
+      });
+    });
+  });
+
+  socket.on('receive_message', (data) => {
+    const chat_area = $('.chat-content-area');
+    chat_area.append(`<p class="user-msg"><b>${data.username}</b>: ${data.message}</p>`);
+  })
+
+  socket.on('join_room_announcement', (data) => {
+    if (data.username.length) {
+      // const chat_users = $('.chat-users')
+      // chat_users.append(`<p class="user-name">${data.username}</p>`);
+      const chat_area = $('.chat-content-area');
+      chat_area.append(`<p class="user-msg"><b>${data.username}</b> has joined the chat.</p>`);
+  }});
+
+  socket.on('leave_chat_announcement', (data) => {
+    const chat_area = $('.chat-content-area');
+    chat_area.append(`<p class="user-msg"><b>{{username}}</b> has left the chat!</p>`);
+  });
+
+</script>
+
+
 <!-- Navbar with a brand and a log out button. -->
 <header id="navbar">
   <nav class="navbar-container container">
@@ -26,10 +94,10 @@
 <div class="chat-container">
   <!-- Number of logged in users will be shows here. -->
   <div class="chat-users">
-    <h1>Room {{ room_number }}</h1>
-    <!-- {% for user in userList %}
-      <p class="user-name">{{ user }}</p>
-    {% endfor %} -->
+    <h1>Room {{ room.room_name }}</h1>
+    {% for member in room_members %}
+      <p class="user-name">{{ member._id.username }}</p>
+    {% endfor %}
   </div>
 
   <!-- Chat area contains the chat msg area, input box and send button. -->

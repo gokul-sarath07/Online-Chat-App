@@ -1,8 +1,11 @@
 from flask import Flask, render_template, url_for, redirect, request
 from flask_socketio import SocketIO, join_room, leave_room
 from flask_login import LoginManager, login_required, current_user, login_user, logout_user
-from db import get_user, save_user
 from pymongo.errors import DuplicateKeyError
+
+from db import get_user, save_user, save_room, add_room_members, \
+	get_rooms_for_user, get_room, is_room_member, get_room_members, is_room_admin, \
+	remove_room_members, update_room
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret_pass_code'
@@ -13,7 +16,10 @@ login_manager.init_app(app)
 
 @app.route('/')
 def home():
-	return render_template('index.html')
+	rooms = []
+	if current_user.is_authenticated:
+		rooms = get_rooms_for_user(current_user.username)
+	return render_template('index.html', rooms=rooms)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -59,23 +65,68 @@ def logout():
     return redirect(url_for('home'))
 
 
-@app.route('/chatroom')
+@app.route('/create-room', methods=['GET', 'POST'])
 @login_required
-def chatroom():
-	username = request.args.get('username')
-	room_number = request.args.get('room-number')
-	if username and room_number:
-		return render_template('chat_room.html', username=username, room_number=room_number)
+def create_room():
+	message = ''
+	if request.method == 'POST':
+		room_name = request.form.get('room_name')
+		usernames = [username.strip() for username in request.form.get('members').split(',')]
+		if room_name and usernames:
+			room_id = save_room(room_name, current_user.username)
+			if current_user.username in usernames:
+				usernames.remove(current_user.username)
+			add_room_members(room_id, room_name, usernames, current_user.username)
+			return redirect(url_for('chat_room', room_id=room_id))
+		else:
+			message = 'Room creation failed!'
+	return render_template('create_room.html', message=message)
+
+
+@app.route('/rooms/<room_id>/edit', methods=['GET', 'POST'])
+@login_required
+def edit_room(room_id):
+	room = get_room(room_id)
+	if room and is_room_admin(room_id, current_user.username):
+		existing_room_members = [member['_id']['username'] for member in get_room_members(room_id)]
+		room_members_str = ",".join(existing_room_members)
+		message = ''
+		if request.method == 'POST':
+			room_name = request.form.get('room_name')
+			room['room_name'] = room_name
+			update_room(room_id, room_name)
+
+			new_members = [username.strip() for username in request.form.get('members').split(',')]
+			members_to_add = list(set(new_members) - set(existing_room_members))
+			members_to_remove = list(set(existing_room_members) - set(new_members))
+			if members_to_add:
+				add_room_members(room_id, room_name, members_to_add, current_user.username)
+			if members_to_remove:
+				remove_room_members(room_id, members_to_remove)
+			message = 'Room edited successfully!'
+			room_members_str = ",".join(new_members)
+		return render_template('edit_room.html', room=room, room_members_str=room_members_str, message=message)
 	else:
-		return redirect(url_for('home'))
+		return "Room not found!", 404
+
+@app.route('/rooms/<room_id>/')
+@login_required
+def chat_room(room_id):
+	room = get_room(room_id)
+	if room and is_room_member(room_id, current_user.username):
+		room_members = get_room_members(room_id)
+		print(room_members)
+		return render_template('chat_room.html', username=current_user.username, room=room, room_members=room_members)
+	else:
+		return "Room not found!", 404
 
 
 @socketio.on('send_message')
 def send_message_event(data):
 	app.logger.info('{} has send message to room {}: {}.'.format(data['username'],
-																 data['room_number'],
+																 data['room'],
 																 data['message']))
-	socketio.emit('receive_message', data, room=data['room_number'])
+	socketio.emit('receive_message', data, room=data['room'])
 
 @socketio.on('disconnect_user')
 def disconnect(data):
@@ -86,8 +137,8 @@ def disconnect(data):
 @socketio.on('join_room')
 def join_room_event(data):
 	if data['username']:
-		app.logger.info('{} has joined the room {}.'.format(data['username'], data['room_number']))
-		join_room(data['room_number'])
+		app.logger.info('{} has joined the room {}.'.format(data['username'], data['room']))
+		join_room(data['room'])
 		socketio.emit('join_room_announcement', data, broadcast=True)
 
 @login_manager.user_loader

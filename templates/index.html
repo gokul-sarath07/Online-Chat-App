@@ -7,9 +7,10 @@
   <h3>You are logged out, Please Login</h3>
 {% endif %}
 
-<form class="sign-up-form" action='/chatroom'>
-  <input type="text" name='username' class="form-input" id="form-name-space" placeholder="Name" required>
-  <input type="text" name='room-number' class="form-input" id="form-name-space" placeholder="Room Number" required>
-  <button type="submit" id="form-btn">Sign In</button>
-</form>
+<h3>Available Rooms</h3>
+<ul>
+  {% for room in rooms %}
+    <li><a href="/rooms/{{ room._id.room_id }}">{{ room.room_name }}</a></li>
+  {% endfor %}
+</ul>
 {% endblock %}
