@@ -30,7 +30,7 @@ navbarLinksContainer.addEventListener("click", (clickEvent) => {
 
 navbarMenu.addEventListener("click", closeMobileNavbar);
 
-window.setInterval(function() {
-  var elem = document.getElementById('scroll');
-  elem.scrollTop = elem.scrollHeight;
-}, 1000);
+// window.setInterval(function() {
+//   var elem = document.getElementById('scroll');
+//   elem.scrollTop = elem.scrollHeight;
+// }, 1000);

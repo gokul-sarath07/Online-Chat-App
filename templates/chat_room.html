@@ -15,6 +15,7 @@
     room: "{{ room._id }}"
     });
 
+
     let message_input = document.querySelector(".msg-input-box");
     document.querySelector(".input-box-btn").onsubmit = (e) => {
       e.preventDefault();
@@ -30,44 +31,69 @@
       message_input.focus();
     };
 
-    window.onbeforeunload = () => {
-      socket.emit('leave_room', {
-        username: "{{ username }}",
-        room: "{{ room._id }}"
-      })
-    };
 
-    // socket.on('disconnect', () => {
-    //   const chat_area = $('.chat-content-area');
-    //   chat_area.append(`<p class="user-msg">{{username}} has left the chat!</p>`);
-    //   socket.emit('disconnect_user', {
-    //     username: "{{username}}"
-    //   });
-    // })
+    let page = 0;
+    document.getElementById('load-older-messages-btn').onclick = (e) => {
+      page += 1;
+      fetch('/rooms/{{ room._id }}/history?page=' + page, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }).then(response => {
+        response.json().then(messages => {
+          messages.reverse().forEach(message => prepend_messages(message.text, message.sender, message.send_time))
+        })
+      })
+    }
+
+
+    function prepend_messages(message, username, send_time) {
+      const newNode = document.createElement('div');
+      newNode.className = "user-msg";
+      newNode.innerHTML = `<p class="message"><b>${ username }</b>: ${ message }</p>
+                           <p class="msg-time">${ send_time }</p>`;
+      const messages_div = document.querySelector('.chat-content-area')
+      messages_div.insertBefore(newNode, messages_div.firstChild);
+    }
+
+
+    // window.onbeforeunload = () => {
+    //   socket.emit('leave_room', {
+    //     username: "{{ username }}",
+    //     room: "{{ room._id }}"
+    //   })
+    // };
+
 
     document.querySelector('.navbar-link').addEventListener('click', () => {
-      socket.emit('disconnect_user', {
-      username: "{{ username }}"
+      socket.emit('leave_room', {
+      username: "{{ username }}",
+      room: "{{ room._id }}"
       });
     });
   });
 
+
   socket.on('receive_message', (data) => {
-    const chat_area = $('.chat-content-area');
-    chat_area.append(`<p class="user-msg"><b>${data.username}</b>: ${data.message}</p>`);
+    const newNode = document.createElement('div');
+    newNode.className = "user-msg";
+    newNode.innerHTML = `<p class="message"><b>${ data.username }</b>: ${ data.message }</p>
+                         <p class="msg-time">${ data.send_time }</p>`;
+    document.querySelector('.chat-content-area').appendChild(newNode);
   })
+
 
   socket.on('join_room_announcement', (data) => {
     if (data.username.length) {
-      // const chat_users = $('.chat-users')
-      // chat_users.append(`<p class="user-name">${data.username}</p>`);
       const chat_area = $('.chat-content-area');
-      chat_area.append(`<p class="user-msg"><b>${data.username}</b> has joined the chat.</p>`);
+      chat_area.append(`<p class="user-msg"><b>${ data.username }</b> has joined the chat.</p>`);
   }});
 
-  socket.on('leave_chat_announcement', (data) => {
+
+  socket.on('leave_room_announcement', (data) => {
     const chat_area = $('.chat-content-area');
-    chat_area.append(`<p class="user-msg"><b>{{username}}</b> has left the chat!</p>`);
+    chat_area.append(`<p class="user-msg"><b>${ data.username }</b> has left the chat!</p>`);
   });
 
 </script>
@@ -98,12 +124,19 @@
     {% for member in room_members %}
       <p class="user-name">{{ member._id.username }}</p>
     {% endfor %}
+    <button type="button" name="button" id="load-older-messages-btn">Load Older Messages</button>
   </div>
 
   <!-- Chat area contains the chat msg area, input box and send button. -->
   <div class="chat-area">
     <!-- Messages will be shows here. -->
     <div class="chat-content-area" id="scroll">
+      {% for object in messages %}
+        <div class="user-msg">
+          <p class="message"><b>{{ object.sender }}</b>: {{ object.text }}</p>
+          <p class="msg-time">{{ object.send_time }}</p>
+        </div>
+      {% endfor %}
     </div>
 
     <!-- Container for input box and send button. -->
