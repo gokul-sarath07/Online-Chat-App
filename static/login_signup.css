@@ -1,0 +1,125 @@
+:root {
+  --heading_color: #f1f1f1;
+  --heading_background_color: #31353E;
+  --buttons_background_color: #f1f1f1;
+  --input_bottom_border_color_not_focus: #000000;
+  --input_bottom_border_color_focus: #04AA6D;
+  --white: #ffffff;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.login_container, .signup_container {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0,0,0, 0.9);
+}
+
+.login_form_div {
+  width: 400px;
+  height: 400px;
+  background-color: var(--white);
+  border-radius: 5%;
+}
+
+.signup_form_div {
+  width: 400px;
+  height: 500px;
+  background-color: var(--white);
+  border-radius: 5%;
+}
+
+.login_heading, .signup_heading {
+  width: 100%;
+  height: 18%;
+  background-color: var(--heading_background_color);
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding-left: 20px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+
+.login_heading h2, .signup_heading h2 {
+  color: var(--heading_color)
+}
+
+.login_message, .signup_message {
+  width: 100%;
+  height: 10%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.login_message p, .signup_message p {
+  font-size: 18px;
+  margin-top: 15px;
+}
+
+.login_form, .signup_form {
+  width: 100%;
+  height: calc(100% - 10% - 18%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.login_form_input_btns_div, .signup_form_input_btns_div {
+  width: 100%;
+  height: calc(100% - 22%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.login_form_input_btns_div input, .signup_form_input_btns_div input {
+  width: 80%;
+  height: 15%;
+  margin-bottom: 20px;
+  letter-spacing: 1px;
+  font-size: 18px;
+  padding-left: 5px;
+  border: none;
+  outline: none;
+  border-bottom: 2px solid var(--input_bottom_border_color_not_focus);
+  transition: border-bottom .4s;
+}
+
+.login_form_input_btns_div input:focus, .signup_form_input_btns_div input:focus {
+  border-bottom-color: var(--input_bottom_border_color_focus)
+}
+
+.login_form_input_btns_div button {
+  margin-top: 5px;
+}
+
+.signup_form_input_btns_div button {
+  margin: 5px 0px 7px;
+}
+
+.login_form_sign_up_link_div, .signup_form_sign_up_link_div {
+  width: 100%;
+  height: 23%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  background-color: var(--buttons_background_color);
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
+.login_form_sign_up_link_div p, .signup_form_sign_up_link_div p {
+  margin-top: 10px;
+}

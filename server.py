@@ -9,6 +9,7 @@ from db import get_user, save_user, save_room, add_room_members, \
 	get_rooms_for_user, get_room, is_room_member, get_room_members, is_room_admin, \
 	remove_room_members, update_room, save_message, get_messages
 
+
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret_pass_code'
 socketio = SocketIO(app)
@@ -16,15 +17,17 @@ login_manager = LoginManager()
 login_manager.login_view = 'login'
 login_manager.init_app(app)
 
-@app.route('/')
+
+@app.route('/home')
+@login_required
 def home():
 	rooms = []
 	if current_user.is_authenticated:
 		rooms = get_rooms_for_user(current_user.username)
-	return render_template('index.html', rooms=rooms)
+	return render_template('home.html', rooms=rooms)
 
 
-@app.route('/login', methods=['GET', 'POST'])
+@app.route('/', methods=['GET', 'POST'])
 def login():
 	if current_user.is_authenticated:
 		return redirect(url_for('home'))
@@ -40,6 +43,7 @@ def login():
 		else:
 			message = 'Login Failed!'
 	return render_template('login.html', message=message)
+
 
 @app.route("/signup", methods=['GET', 'POST'])
 def signup():
@@ -74,7 +78,10 @@ def create_room():
 	if request.method == 'POST':
 		room_name = request.form.get('room_name')
 		usernames = [username.strip() for username in request.form.get('members').split(',')]
-		if room_name and usernames:
+		rooms = get_rooms_for_user(current_user.username)
+		rooms = [rooms[idx]["room_name"] for idx in range(len(rooms))]
+		rooms.append('')
+		if room_name not in rooms and usernames != ['']:
 			room_id = save_room(room_name, current_user.username)
 			if current_user.username in usernames:
 				usernames.remove(current_user.username)
@@ -111,6 +118,7 @@ def edit_room(room_id):
 	else:
 		return "Room not found!", 404
 
+
 @app.route('/rooms/<room_id>/')
 @login_required
 def chat_room(room_id):
@@ -134,6 +142,7 @@ def get_older_messages(room_id):
 		return dumps(messages)
 	else:
 		return "Room not found!", 404
+
 
 @socketio.on('send_message')
 def send_message_event(data):
@@ -160,9 +169,11 @@ def leave_room_event(data):
 		leave_room(data['room'])
 		socketio.emit('leave_room_announcement', data, room=data['room'])
 
+
 @login_manager.user_loader
 def load_user(username):
     return get_user(username)
+
 
 if __name__ == '__main__':
 	socketio.run(app, debug=True)

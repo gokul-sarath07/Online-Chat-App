@@ -283,8 +283,8 @@ body {
   right: 0px;
   border-radius: 50%;
   font-size: 25px;
-  border: 1px solid black;
   outline: none;
+  border: 1px solid black;
   cursor: pointer;
   transition: ease-in-out all 0.1s;
   transform: scale(1);

@@ -1,11 +1,28 @@
 {% extends 'base.html' %}
 
+{% block css_link %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='create_room.css') }}">
+{% endblock %}
+
 {% block body %}
-<h1>Create Room</h1>
-<h3>{{ message }}</h3>
-<form method='POST'>
-  <input type="text" name='room_name' placeholder="Room Name" required>
-  <input type="text" name='members' placeholder="Members" required>
-  <button type="submit">Submit</button>
-</form>
+<div class="create_room_container">
+  <div class="create_room_form_div">
+    <div class="create_room_heading">
+      <h1>Create Room</h1>
+    </div>
+    <div class="create_room_message">
+      <p>{{ message }}</p>
+    </div>
+    <form class="create_room_form" action="/create-room" method='POST'>
+      <div class="create_room_form_inputs">
+        <input type="text" name='room_name' placeholder="Room Name">
+        <input type="text" name='members' placeholder="Members">
+      </div>
+      <div class="create_room_form_btns">
+        <button class="btn btn-outline-primary" type="submit">Create</button>
+        <button class="btn btn-outline-secondary" onclick="window.location.href='/home'" type="button">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
 {% endblock %}

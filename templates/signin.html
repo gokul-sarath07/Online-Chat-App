@@ -22,10 +22,11 @@
 
   <!-- Form for inputing data -->
   <div class="form-container">
-    <form class="sign-up-form" action='/chatroom'>
-      <input type="text" name='username' class="form-input" id="form-name-space" placeholder="Name" required>
-      <input type="text" name='room-number' class="form-input" id="form-name-space" placeholder="Room Number" required>
-      <button type="submit" id="form-btn">Sign In</button>
+    <h3>{{ message }}</h3>
+    <form class="sign-up-form" action='/'>
+      <input type="text" name='username' class="form-input" id="form-name-space" placeholder="Name Here" required>
+      <input type="password" name='password' class="form-input" id="form-name-space" placeholder="Password Here" required>
+      <button type="submit" id="form-btn">Login</button>
     </form>
 
     <!-- Form header on the side -->
@@ -40,5 +41,5 @@
 {% endblock %}
 
 {% block script_link %}
-<script type="text/javascript" src="{{ url_for('static', filename='banner_login.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='banner_login.js') }}"></script>
 {% endblock %}
