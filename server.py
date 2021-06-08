@@ -125,8 +125,8 @@ def edit_room(room_id):
 @login_required
 def chat_room(room_id):
 	room = get_room(room_id)
-	is_admin = is_room_admin(room_id, current_user.username)
 	if room and is_room_member(room_id, current_user.username):
+		is_admin = is_room_admin(room_id, current_user.username)
 		room_members = get_room_members(room_id)
 		messages = get_messages(room_id)
 		return render_template('chat_room.html', username=current_user.username,
