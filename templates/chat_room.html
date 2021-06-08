@@ -51,22 +51,18 @@
     function prepend_messages(message, username, send_time) {
       const newNode = document.createElement('div');
       newNode.className = "user-msg";
-      newNode.innerHTML = `<p class="message"><b>${ username }</b>: ${ message }</p>
-                           <p class="msg-time">${ send_time }</p>`;
+      newNode.innerHTML = `<div class="user-msg-message">
+                            <p class="message"><b>${ username }</b>: ${ message }</p>
+                           </div>
+                           <div class="user-msg-time">
+                             <p class="msg-time">${ send_time }</p>
+                           </div>`
       const messages_div = document.querySelector('.chat-content-area')
       messages_div.insertBefore(newNode, messages_div.firstChild);
     }
 
 
-    // window.onbeforeunload = () => {
-    //   socket.emit('leave_room', {
-    //     username: "{{ username }}",
-    //     room: "{{ room._id }}"
-    //   })
-    // };
-
-
-    document.querySelector('.navbar-link').addEventListener('click', () => {
+    document.querySelector('.navbar_home_link').addEventListener('click', () => {
       socket.emit('leave_room', {
       username: "{{ username }}",
       room: "{{ room._id }}"
@@ -78,53 +74,76 @@
   socket.on('receive_message', (data) => {
     const newNode = document.createElement('div');
     newNode.className = "user-msg";
-    newNode.innerHTML = `<p class="message"><b>${ data.username }</b>: ${ data.message }</p>
-                         <p class="msg-time">${ data.send_time }</p>`;
+    newNode.innerHTML = `<div class="user-msg-message">
+                           <p class="message"><b>${ data.username }</b>: ${ data.message }</p>
+                         </div>
+                         <div class="user-msg-time">
+                           <p class="msg-time">${ data.send_time }</p>
+                         </div>`;
     document.querySelector('.chat-content-area').appendChild(newNode);
-  })
+  });
 
 
   socket.on('join_room_announcement', (data) => {
     if (data.username.length) {
-      const chat_area = $('.chat-content-area');
-      chat_area.append(`<p class="user-msg"><b>${ data.username }</b> has joined the chat.</p>`);
+      const newNode = document.createElement('div');
+      newNode.className = "user-msg";
+      newNode.innerHTML = `<div class="user-msg-message">
+                             <p class="message"><b>${ data.username }</b> has joined the chat!</p>
+                           </div>`;
+      document.querySelector('.chat-content-area').appendChild(newNode);
   }});
 
 
   socket.on('leave_room_announcement', (data) => {
-    const chat_area = $('.chat-content-area');
-    chat_area.append(`<p class="user-msg"><b>${ data.username }</b> has left the chat!</p>`);
+    const newNode = document.createElement('div');
+    newNode.className = "user-msg";
+    newNode.innerHTML = `<div class="user-msg-message">
+                           <p class="message"><b>${ data.username }</b> has left the chat!</p>
+                         </div>`;
+    document.querySelector('.chat-content-area').appendChild(newNode);
   });
 
 </script>
 
 
-<!-- Navbar with a brand and a log out button. -->
-<header id="navbar">
-  <nav class="navbar-container container">
+<!-- Navbar with a brand and home and edit room link. -->
+<nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
+  <div class="container-fluid">
     <a class="navbar-brand" href="#">Chat Room</a>
-    <button type="button" class="navbar-toggle" aria-label="Open navigation menu">
-      <span class="icon-bar"></span>
-      <span class="icon-bar"></span>
-      <span class="icon-bar"></span>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
     </button>
-    <div class="navbar-menu">
-      <ul class="navbar-links">
-        <li class="navbar-item"><a class="navbar-link" href="/logout">Log out</a></li>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
+        <li class="nav-item">
+          <a class="nav-item nav-link navbar_home_link" href="/home">Home</a>
+        </li>
+        {% if is_admin %}
+          <li class="nav-item">
+            <a class="nav-item nav-link" href="/rooms/{{ room._id }}/edit">Edit Room</a>
+          </li>
+        {% endif %}
       </ul>
     </div>
-  </nav>
-</header>
+  </div>
+</nav>
 
 <!-- Chat Container. -->
 <div class="chat-container">
   <!-- Number of logged in users will be shows here. -->
   <div class="chat-users">
-    <h1>Room {{ room.room_name }}</h1>
-    {% for member in room_members %}
-      <p class="user-name">{{ member._id.username }}</p>
-    {% endfor %}
-    <button type="button" name="button" id="load-older-messages-btn">Load Older Messages</button>
+    <div class="chat-users-heading">
+      <h2>Room {{ room.room_name }}</h2>
+    </div>
+    <div class="chat-users-users">
+      {% for member in room_members %}
+        <p class="user-name">{{ member._id.username }}</p>
+      {% endfor %}
+    </div>
+    <div class="chat-users-btn">
+      <button class="btn btn-secondary" type="button" name="button" id="load-older-messages-btn">Load Older Messages</button>
+    </div>
   </div>
 
   <!-- Chat area contains the chat msg area, input box and send button. -->
@@ -133,8 +152,12 @@
     <div class="chat-content-area" id="scroll">
       {% for object in messages %}
         <div class="user-msg">
-          <p class="message"><b>{{ object.sender }}</b>: {{ object.text }}</p>
-          <p class="msg-time">{{ object.send_time }}</p>
+          <div class="user-msg-message">
+            <p class="message"><b>{{ object.sender }}</b>: {{ object.text }}</p>
+          </div>
+          <div class="user-msg-time">
+            <p class="msg-time">{{ object.send_time }}</p>
+          </div>
         </div>
       {% endfor %}
     </div>

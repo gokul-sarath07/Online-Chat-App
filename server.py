@@ -85,7 +85,8 @@ def create_room():
 			room_id = save_room(room_name, current_user.username)
 			if current_user.username in usernames:
 				usernames.remove(current_user.username)
-			add_room_members(room_id, room_name, usernames, current_user.username)
+			if usernames != []:
+				add_room_members(room_id, room_name, usernames, current_user.username)
 			return redirect(url_for('chat_room', room_id=room_id))
 		else:
 			message = 'Room creation failed!'
@@ -100,6 +101,7 @@ def edit_room(room_id):
 		existing_room_members = [member['_id']['username'] for member in get_room_members(room_id)]
 		room_members_str = ",".join(existing_room_members)
 		message = ''
+
 		if request.method == 'POST':
 			room_name = request.form.get('room_name')
 			room['room_name'] = room_name
@@ -108,11 +110,11 @@ def edit_room(room_id):
 			new_members = [username.strip() for username in request.form.get('members').split(',')]
 			members_to_add = list(set(new_members) - set(existing_room_members))
 			members_to_remove = list(set(existing_room_members) - set(new_members))
-			if members_to_add:
+			if members_to_add != []:
 				add_room_members(room_id, room_name, members_to_add, current_user.username)
-			if members_to_remove:
+			if members_to_remove != []:
 				remove_room_members(room_id, members_to_remove)
-			message = 'Room edited successfully!'
+			message = 'Room Edited Successfully!'
 			room_members_str = ",".join(new_members)
 		return render_template('edit_room.html', room=room, room_members_str=room_members_str, message=message)
 	else:
@@ -123,11 +125,12 @@ def edit_room(room_id):
 @login_required
 def chat_room(room_id):
 	room = get_room(room_id)
+	is_admin = is_room_admin(room_id, current_user.username)
 	if room and is_room_member(room_id, current_user.username):
 		room_members = get_room_members(room_id)
 		messages = get_messages(room_id)
 		return render_template('chat_room.html', username=current_user.username,
-					room=room, room_members=room_members, messages=messages)
+			room=room, room_members=room_members, messages=messages, is_admin=is_admin)
 	else:
 		return "Room not found!", 404
 

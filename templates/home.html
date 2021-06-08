@@ -5,6 +5,23 @@
 {% endblock %}
 
 {% block body %}
+
+<nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">Lobby</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
+        <li class="nav-item">
+          <a class="nav-item nav-link" href="/logout">Log Out</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
 <div class="home_container">
   <div class="home_details">
     <div class="home_heading_div">
@@ -15,12 +32,16 @@
       {% endif %}
     </div>
     <div class="available_room_container">
-      <h3>Available Rooms</h3>
-      <ul>
-        {% for room in rooms %}
-          <li><a href="/rooms/{{ room._id.room_id }}">{{ room.room_name }}</a></li>
-        {% endfor %}
-      </ul>
+      <div class="available_room_container_heading_div">
+        <h3>Available Rooms</h3>
+      </div>
+      <div class="available_room_container_list_div">
+        <ul>
+          {% for room in rooms %}
+            <li><a href="/rooms/{{ room._id.room_id }}">{{ room.room_name }}</a></li>
+          {% endfor %}
+        </ul>
+      </div>
     </div>
     <div class="home_link_div">
       <p>Don't have a room? <a href="/create-room">Create One</a></p>

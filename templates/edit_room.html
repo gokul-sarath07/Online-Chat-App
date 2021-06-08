@@ -1,12 +1,28 @@
 {% extends 'base.html' %}
 
-{% block body %}
-<h1>Edit Room</h1>
-<h3>{{ message }}</h3>
-<form method="POST">
-  <input type="text" name='room_name' value="{{ room.room_name }}">
-  <input type="text" name='members' value="{{ room_members_str }}">
-  <button type="submit">Submit</button>
-</form>
+{% block css_link %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='edit_room.css') }}">
+{% endblock %}
 
+{% block body %}
+<div class="edit_room_container">
+  <div class="edit_room_form_div">
+    <div class="edit_room_heading">
+      <h1>Edit Room</h1>
+    </div>
+    <div class="edit_room_message">
+      <p>{{ message }}</p>
+    </div>
+    <form class="edit_room_form" action="/rooms/{{ room._id }}/edit" method="POST">
+      <div class="edit_room_form_inputs">
+        <input type="text" name='room_name' value="{{ room.room_name }}">
+        <input type="text" name='members' value="{{ room_members_str }}">
+      </div>
+      <div class="edit_room_form_btn">
+        <button class="btn btn-outline-success" type="submit">Save</button>
+        <button class="btn btn-outline-secondary" onclick="window.location.href='/rooms/{{ room._id }}'" type="button">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
 {% endblock %}

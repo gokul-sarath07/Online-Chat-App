@@ -53,7 +53,7 @@ def add_room_members(room_id, room_name, usernames, added_by):
 
 def remove_room_members(room_id, usernames):
     room_members_collection.delete_many(
-        {'_id': {'$in': [{'room_id': room_id, 'username': username} for username in usernames]}})
+            {'_id': {'$in': [{'room_id': ObjectId(room_id), 'username': username} for username in usernames]}})
 
 
 def get_room_members(room_id):

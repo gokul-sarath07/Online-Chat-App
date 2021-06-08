@@ -46,17 +46,24 @@
   background-color: var(--white);
 }
 
-.available_room_container h3 {
+.available_room_container_heading_div {
+  width: 100%;
+  height: 20%;
   display: flex;
-  margin-top: 5px;
   justify-content: center;
-  box-sizing: border-box;
+  align-items: center;
 }
 
-.available_room_container ul {
+.available_room_container_list_div {
+  width: 100%;
+  height: calc(100% - 20%);
+  overflow: scroll;
+  overflow-x: hidden;
+}
+
+.available_room_container_list_div ul {
   margin-left: 20px;
   font-size: 20px;
-  overflow: auto;
 }
 
 .home_link_div {
